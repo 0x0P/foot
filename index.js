@@ -8,25 +8,66 @@ const footList = [
 
 function updateImage(node) {
   const newSrc = footList[Math.floor(Math.random() * footList.length)];
-  node.src = newSrc;
+  const img = new Image();
+  img.src = newSrc;
+
+  img.onload = function () {
+    node.src = newSrc;
+  };
+
+  img.onerror = function () {
+    console.error("Image failed to load:", newSrc);
+  };
 }
+
+function getRandomChar() {
+  const chars = ["발", "도", "현"];
+  return chars[Math.floor(Math.random() * chars.length)];
+}
+
+function replaceTextWithRandomChars(node) {
+  const ignoreTags = ["STYLE", "SCRIPT"];
+
+  if (ignoreTags.includes(node.nodeName)) {
+    return;
+  }
+
+  if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+    const textLength = node.textContent.length;
+    let newText = "";
+    for (let i = 0; i < textLength; i++) {
+      newText += getRandomChar();
+    }
+    node.textContent = newText;
+  } else if (
+    node.nodeName === "INPUT" ||
+    node.nodeName === "TEXTAREA" ||
+    node.nodeName === "BUTTON"
+  ) {
+    const valueLength = node.value.length;
+    let newValue = "";
+    for (let i = 0; i < valueLength; i++) {
+      newValue += getRandomChar();
+    }
+    node.value = newValue;
+  } else {
+    node.childNodes.forEach(replaceTextWithRandomChars);
+  }
+}
+
 setInterval(() => {
+  document.body.childNodes.forEach(replaceTextWithRandomChars);
   document.querySelectorAll("*").forEach((node) => {
     if (node.tagName === "IMG") {
-      if (!node.classList.contains("footdh")) {
-        updateImage(node);
-      } else if (!footList.includes(node.src)) {
-        updateImage(node);
-      }
+      updateImage(node);
     }
     node.addEventListener("click", () => {
       if (!node.querySelector("img")) {
         const img = document.createElement("img");
-        img.classList.add("footdh");
         updateImage(img);
         node.innerHTML = "";
         node.appendChild(img);
       }
     });
   });
-}, 500);
+}, 200);
