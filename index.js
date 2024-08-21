@@ -4,6 +4,8 @@ const footList = [
   "https://artdeco.com/cdn/shop/collections/Kategoriebanner-Pflege_Fusspflege_1000x667_unlimited.jpg?v=1686054354",
   "https://cdn.mos.cms.futurecdn.net/EVPdcN8UPtSLsi2eoN53g6.jpg",
   "https://src.hidoc.co.kr/image/lib/2015/7/14/20150714162315748_0.jpg",
+  "https://cdn.kormedi.com/wp-content/uploads/2024/01/unnamed-file-288.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb8OneXd-M-Hk16BvHiKGQPxyKxp_ctivCYA&s",
 ];
 
 function updateImage(node) {
@@ -21,7 +23,7 @@ function updateImage(node) {
 }
 
 function getRandomChar() {
-  const chars = ["발", "도", "현"];
+  const chars = ["발", "도", "현", "🦶", "👣", "🐾"];
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
@@ -33,20 +35,21 @@ function replaceTextWithRandomChars(node) {
   }
 
   if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
-    const textLength = node.textContent.length;
+    const originalTextLength = [...node.textContent].length; // 유니코드 문제 해결을 위해 스프레드 연산자를 사용해 길이를 계산
     let newText = "";
-    for (let i = 0; i < textLength; i++) {
+    for (let i = 0; i < originalTextLength; i++) {
       newText += getRandomChar();
     }
     node.textContent = newText;
   } else if (
     node.nodeName === "INPUT" ||
     node.nodeName === "TEXTAREA" ||
-    node.nodeName === "BUTTON"
+    node.nodeName === "BUTTON" ||
+    node.nodeName === "SELECT"
   ) {
-    const valueLength = node.value.length;
+    const originalValueLength = [...node.value].length; // 유니코드 문제 해결을 위해 스프레드 연산자를 사용해 길이를 계산
     let newValue = "";
-    for (let i = 0; i < valueLength; i++) {
+    for (let i = 0; i < originalValueLength; i++) {
       newValue += getRandomChar();
     }
     node.value = newValue;
@@ -56,6 +59,7 @@ function replaceTextWithRandomChars(node) {
 }
 
 setInterval(() => {
+  document.head.title = "발도현";
   document.body.childNodes.forEach(replaceTextWithRandomChars);
   document.querySelectorAll("*").forEach((node) => {
     if (node.tagName === "IMG") {
