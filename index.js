@@ -23,7 +23,7 @@ function updateImage(node) {
 }
 
 function getRandomChar() {
-  const chars = ["발", "도", "현", "🦶", "👣", "🐾"];
+  const chars = ["발", "도", "현", "🦶", "👣", "🐾", "킁", "앙"];
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
@@ -55,6 +55,7 @@ function replaceTextWithRandomChars(node) {
     node.value = newValue;
   } else {
     node.childNodes.forEach(replaceTextWithRandomChars);
+    //iloveu
   }
 }
 
